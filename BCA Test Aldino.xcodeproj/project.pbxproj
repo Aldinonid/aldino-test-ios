@@ -29,9 +29,27 @@
 		A54576072FD3964D00F2A08A /* BCA Test AldinoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "BCA Test AldinoUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		A54576252FD3988800F2A08A /* Exceptions for "BCA Test Aldino" folder in "BCA Test AldinoTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Core/Network/Endpoint.swift,
+				Core/Network/NetworkError.swift,
+				Core/Network/NetworkManager.swift,
+				Domain/Models/SearchResponse.swift,
+				Domain/Models/Song.swift,
+				Domain/Repositories/MusicRepository.swift,
+			);
+			target = A54575FC2FD3964D00F2A08A /* BCA Test AldinoTests */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		A54575F22FD3964900F2A08A /* BCA Test Aldino */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				A54576252FD3988800F2A08A /* Exceptions for "BCA Test Aldino" folder in "BCA Test AldinoTests" target */,
+			);
 			path = "BCA Test Aldino";
 			sourceTree = "<group>";
 		};
