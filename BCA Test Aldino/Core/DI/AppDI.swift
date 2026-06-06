@@ -10,7 +10,7 @@ import Foundation
 enum AppDI {
     
     static func makeNetworkManager() -> NetworkManager {
-        NetworkManager.shared
+        NetworkManager()
     }
     
     static func makeMusicRepository() -> MusicRepository {

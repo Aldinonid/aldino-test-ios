@@ -19,10 +19,7 @@ final class MusicRepository: MusicRepositoryProtocol {
     }
 
     func searchSong(term: String) async throws -> [Song] {
-        let response: SearchResponse = try await networkManager.request(
-            .search(term: term),
-            type: SearchResponse.self
-        )
+        let response: SearchResponse = try await networkManager.request(.search(term: term))
         return response.results
     }
 }

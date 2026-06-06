@@ -8,18 +8,16 @@
 import Foundation
 
 protocol NetworkManaging {
-    func request<T: Decodable>(_ endpoint: Endpoint, type: T.Type) async throws -> T
+    func request<T: Decodable>(_ endpoint: Endpoint) async throws -> T
 }
 
 final class NetworkManager: NetworkManaging {
     
-    static let shared = NetworkManager()
     private let session: URLSession = .shared
 
-    func request<T: Decodable>(_ endpoint: Endpoint, type: T.Type) async throws -> T {
+    func request<T: Decodable>(_ endpoint: Endpoint) async throws -> T {
         do {
-            let urlRequest = try endpoint.makeURLRequest()
-            let (data, response) = try await session.data(for: urlRequest)
+            let (data, response) = try await session.data(from: endpoint.url)
 
             guard let httpResponse = response as? HTTPURLResponse else {
                 throw NetworkError.invalidResponse
