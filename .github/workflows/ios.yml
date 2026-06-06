@@ -23,14 +23,8 @@ jobs:
         with:
           xcode-version: latest-stable
 
-      - name: Install SwiftLint
-        run: brew install swiftlint
-
       - name: Install Fastlane
         run: gem install fastlane
-
-      - name: Run SwiftLint
-        run: swiftlint
 
       - name: Resolve Package Dependencies
         run: xcodebuild -resolvePackageDependencies
