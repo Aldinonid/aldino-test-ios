@@ -47,7 +47,8 @@ extension SearchView {
                 playerViewModel.play(song)
             } label: {
                 SongRow(song: song,
-                        isPlaying: playerViewModel.currentSong?.trackId == song.trackId)
+                        isPlaying: playerViewModel.currentSong?.trackId == song.trackId,
+                        playerStatus: playerViewModel.playbackState)
             }
             .buttonStyle(.plain)
         }

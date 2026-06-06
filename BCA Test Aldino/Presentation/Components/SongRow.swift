@@ -11,6 +11,7 @@ struct SongRow: View {
     
     let song: Song
     let isPlaying: Bool
+    let playerStatus: PlayerStatus
     
     var body: some View {
         HStack(spacing: 12) {
@@ -34,9 +35,9 @@ struct SongRow: View {
             if isPlaying {
                 Image(systemName: "waveform")
                     .symbolEffect(
-                        .appear,
-                        options: .repeating
-                    )
+                        .bounce.up,
+                        options: .repeating,
+                        isActive: playerStatus.isPlaying)
             }
         }
     }

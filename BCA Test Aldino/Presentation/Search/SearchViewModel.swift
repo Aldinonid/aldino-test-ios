@@ -23,6 +23,9 @@ final class SearchViewModel: ObservableObject {
         self.repository = repository
         bindSearch()
     }
+}
+
+extension SearchViewModel {
     
     func search() async {
         await search(keyword: searchText)
@@ -30,20 +33,26 @@ final class SearchViewModel: ObservableObject {
     
     func search(keyword: String) async {
         let trimmedKeyword = keyword.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmedKeyword.isEmpty else { return }
+        guard !trimmedKeyword.isEmpty else {
+            songs = []
+            state = .idle
+            return
+        }
         state = .loading
         do {
             let result = try await repository.searchSong(term: trimmedKeyword)
+            allSongs = result
             songs = result
             state = .loaded
         } catch {
+            songs = []
             state = .error(error.localizedDescription)
         }
     }
     
     func bindSearch() {
         $searchText
-            .debounce(for: .milliseconds(1000), scheduler: RunLoop.main)
+            .debounce(for: .milliseconds(500), scheduler: RunLoop.main)
             .removeDuplicates()
             .sink { [weak self] keyword in
                 guard let self else { return }
