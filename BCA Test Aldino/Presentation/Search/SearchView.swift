@@ -18,8 +18,7 @@ struct SearchView: View {
             case .idle:
                 emptyView
             case .loading:
-                ProgressView()
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                LoadingView()
             case .loaded:
                 songList
             case .empty:
@@ -31,7 +30,6 @@ struct SearchView: View {
         .searchable(text: $viewModel.searchText,
                     placement: SearchFieldPlacement.navigationBarDrawer,
                     prompt: "Search Music")
-        .navigationBarTitleDisplayMode(.inline)
         .onSubmit(of: .search) {
             Task {
                 await viewModel.search()
@@ -49,7 +47,7 @@ extension SearchView {
                 playerViewModel.play(song)
             } label: {
                 SongRow(song: song,
-                        isPlaying: playerViewModel.currentSong?.trackId == song.trackId && playerViewModel.playbackState.isPlaying)
+                        isPlaying: playerViewModel.currentSong?.trackId == song.trackId)
             }
             .buttonStyle(.plain)
         }

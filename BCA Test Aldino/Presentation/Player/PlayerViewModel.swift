@@ -23,16 +23,9 @@ final class PlayerViewModel: ObservableObject {
     private var songs: [Song] = []
     private(set) var currentIndex = 0
     
-    var currentTimeText: String {
-        formatTime(progress)
-    }
-    
-    var durationText: String {
-        formatTime(duration)
-    }
-    
     init(playerManager: AudioPlayer) {
         self.playerManager = playerManager
+        bindPlayer()
     }
     
     func setup(songs: [Song]) {
@@ -93,7 +86,51 @@ final class PlayerViewModel: ObservableObject {
 }
 
 private extension PlayerViewModel {
-    private func formatTime(_ seconds: Double) -> String {
+    
+    func bindPlayer() {
+        playerManager.onTimeChanged = { [weak self] time in
+            guard let self else { return }
+            Task { @MainActor in
+                guard !self.isSeeking else { return }
+                self.progress = time
+            }
+        }
+        
+        playerManager.onDurationChanged = { [weak self] duration in
+            guard let self else { return }
+            Task { @MainActor in
+                self.duration = duration
+            }
+        }
+        
+        playerManager.onPlaybackStateChanged = { [weak self] isPlaying in
+            guard let self else { return }
+            Task { @MainActor in
+                self.playbackState = isPlaying ? .playing : .paused
+            }
+        }
+        
+        playerManager.onPlaybackFinished = { [weak self] in
+            guard let self else { return }
+            Task { @MainActor in
+                self.playbackState = .finished
+                self.progress = self.duration
+            }
+        }
+    }
+}
+
+extension PlayerViewModel {
+    
+    var currentTimeText: String {
+        formatTime(progress)
+    }
+    
+    var durationText: String {
+        formatTime(duration)
+    }
+    
+    func formatTime(_ seconds: Double) -> String {
         guard seconds.isFinite else { return "0:00" }
         let minutes = Int(seconds) / 60
         let seconds = Int(seconds) % 60
