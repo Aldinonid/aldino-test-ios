@@ -8,14 +8,6 @@
 import Foundation
 import Combine
 
-enum ViewState: Equatable {
-    case idle
-    case loading
-    case loaded
-    case empty
-    case error(String)
-}
-
 @MainActor
 final class SearchViewModel: ObservableObject {
     
@@ -30,6 +22,10 @@ final class SearchViewModel: ObservableObject {
     init(repository: MusicRepositoryProtocol) {
         self.repository = repository
         bindSearch()
+    }
+    
+    func search() async {
+        await search(keyword: searchText)
     }
     
     func search(keyword: String) async {

@@ -8,6 +8,9 @@
 import AVFoundation
 
 protocol AudioPlayer: AnyObject {
+    
+    var onPlaybackStateChanged: ((Bool) -> Void)? { get set }
+    
     func play(url: URL)
     func pause()
     func resume()
@@ -16,20 +19,25 @@ protocol AudioPlayer: AnyObject {
 
 final class AudioPlayerManager: AudioPlayer {
     
+    var onPlaybackStateChanged: ((Bool) -> Void)?
+    
     private var avPlayer: AVPlayer?
     
     func play(url: URL) {
         let item = AVPlayerItem(url: url)
         avPlayer = AVPlayer(playerItem: item)
         avPlayer?.play()
+        onPlaybackStateChanged?(true)
     }
     
     func pause() {
         avPlayer?.pause()
+        onPlaybackStateChanged?(false)
     }
     
     func resume() {
         avPlayer?.play()
+        onPlaybackStateChanged?(true)
     }
     
     func seek(to seconds: Double) {

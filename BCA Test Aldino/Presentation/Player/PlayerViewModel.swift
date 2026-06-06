@@ -8,23 +8,28 @@
 import Foundation
 import Combine
 
-enum PlaybackState {
-    case playing
-    case paused
-    case finished
-}
-
 @MainActor
 final class PlayerViewModel: ObservableObject {
     
     @Published var currentSong: Song?
-    @Published var playbackState: PlaybackState = .paused
+    @Published var playbackState: PlayerStatus = .paused
+    
+    @Published var progress: Double = 0
+    @Published var duration: Double = 0
     
     @Published var isSeeking = false
     
     private let playerManager: AudioPlayer
     private var songs: [Song] = []
     private(set) var currentIndex = 0
+    
+    var currentTimeText: String {
+        formatTime(progress)
+    }
+    
+    var durationText: String {
+        formatTime(duration)
+    }
     
     init(playerManager: AudioPlayer) {
         self.playerManager = playerManager
@@ -62,6 +67,7 @@ final class PlayerViewModel: ObservableObject {
         case .paused:
             playerManager.resume()
         case .finished:
+            progress = 0
             playerManager.seek(to: 0)
             playerManager.resume()
         }
@@ -80,7 +86,21 @@ final class PlayerViewModel: ObservableObject {
     }
     
     func seek() {
+        playerManager.seek(to: progress)
         isSeeking = false
     }
     
+}
+
+private extension PlayerViewModel {
+    private func formatTime(_ seconds: Double) -> String {
+        guard seconds.isFinite else { return "0:00" }
+        let minutes = Int(seconds) / 60
+        let seconds = Int(seconds) % 60
+        return String(
+            format: "%d:%02d",
+            minutes,
+            seconds
+        )
+    }
 }

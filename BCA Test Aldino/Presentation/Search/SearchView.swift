@@ -16,32 +16,60 @@ struct SearchView: View {
         Group {
             switch viewModel.state {
             case .idle:
-                ContentUnavailableView("Search Music",
-                                       systemImage: "music.note")
+                emptyView
             case .loading:
                 ProgressView()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             case .loaded:
-                List(viewModel.songs) { song in
-                    Button {
-                        playerViewModel.setup(songs: viewModel.songs)
-                        playerViewModel.play(song)
-                    } label: {
-                        Text(song.trackName)
-                    }
-                    .buttonStyle(.plain)
-                }
+                songList
             case .empty:
-                ContentUnavailableView.search
+                noResult
             case .error(let message):
-                ContentUnavailableView("Something Went Wrong",
-                                       systemImage: "exclamationmark.triangle",
-                                       description: Text(message))
+                errorView(message)
             }
         }
         .searchable(text: $viewModel.searchText,
                     placement: SearchFieldPlacement.navigationBarDrawer,
                     prompt: "Search Music")
         .navigationBarTitleDisplayMode(.inline)
+        .onSubmit(of: .search) {
+            Task {
+                await viewModel.search()
+            }
+        }
+    }
+}
+
+extension SearchView {
+    
+    var songList: some View {
+        List(viewModel.songs) { song in
+            Button {
+                playerViewModel.setup(songs: viewModel.songs)
+                playerViewModel.play(song)
+            } label: {
+                SongRow(song: song,
+                        isPlaying: playerViewModel.currentSong?.trackId == song.trackId && playerViewModel.playbackState.isPlaying)
+            }
+            .buttonStyle(.plain)
+        }
+    }
+    
+    var emptyView: some View {
+        EmptyStateView(icon: "music.note.list",
+                       title: "Search for music",
+                       message: "Type an artist or song name above")
+    }
+    
+    var noResult: some View {
+        ContentUnavailableView("No Results",
+                               systemImage: "magnifyingglass",
+                               description: Text("Try searching for another song"))
+    }
+    
+    func errorView(_ message: String) -> some View {
+        ContentUnavailableView("Something Went Wrong",
+                               systemImage: "exclamationmark.triangle",
+                               description: Text(message))
     }
 }

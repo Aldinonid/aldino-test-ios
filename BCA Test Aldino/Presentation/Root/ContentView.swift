@@ -28,12 +28,8 @@ struct ContentView: View {
         }
         .navigationTitle("Music Player")
         .sheet(isPresented: $showPlayer) {
-            PlayerView()
+            PlayerView(viewModel: playerViewModel)
                 .presentationDragIndicator(.visible)
         }
     }
-}
-
-#Preview {
-    ContentView()
 }
