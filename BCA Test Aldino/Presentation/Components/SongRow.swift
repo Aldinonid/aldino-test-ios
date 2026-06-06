@@ -15,7 +15,7 @@ struct SongRow: View {
     
     var body: some View {
         HStack(spacing: 12) {
-            AsyncImage(url: URL(string: song.artworkUrl100 ?? ""))
+            CachedAsyncImage(url: URL(string: song.artworkUrl100 ?? ""))
                 .frame(width: 60, height: 60)
                 .clipShape(RoundedRectangle(cornerRadius: 8))
             

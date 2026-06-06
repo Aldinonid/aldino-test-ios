@@ -20,7 +20,6 @@ struct ContentView: View {
                        playerViewModel: playerViewModel)
             
             if playerViewModel.currentSong != nil {
-                Divider()
                 MiniPlayerView(viewModel: playerViewModel) {
                     showPlayer = true
                 }

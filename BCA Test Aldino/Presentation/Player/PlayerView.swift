@@ -13,25 +13,12 @@ struct PlayerView: View {
     
     var body: some View {
         VStack(spacing: 24) {
-            AsyncImage(
-                url: URL(string: viewModel.currentSong?.artworkUrl100 ?? "")
-            ) { image in
-                image
-                    .resizable()
-                    .scaledToFit()
-                
-            } placeholder: {
-                
-                ProgressView()
-            }
-            .frame(maxWidth: 300)
-            .clipShape(
-                RoundedRectangle(cornerRadius: 16)
-            )
-            .padding(.top, 24)
+            CachedAsyncImage(url: URL(string: viewModel.currentSong?.artworkUrl100 ?? ""))
+                .frame(maxWidth: 300)
+                .clipShape(RoundedRectangle(cornerRadius: 16))
+                .padding(.top, 24)
             
             VStack(spacing: 8) {
-                
                 Text(viewModel.currentSong?.trackName ?? "-")
                     .font(.title2)
                     .fontWeight(.semibold)
