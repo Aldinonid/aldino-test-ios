@@ -1,0 +1,34 @@
+default_platform(:ios)
+
+platform :ios do
+
+  desc "Run SwiftLint"
+  lane :lint do
+    sh("swiftlint")
+  end
+
+  desc "Run unit tests with code coverage"
+  lane :test do
+    scan(
+      scheme: "BCA Test Aldino",
+      clean: true,
+      code_coverage: true
+    )
+  end
+
+  desc "Build application"
+  lane :build do
+    build_app(
+      scheme: "BCA Test Aldino",
+      skip_archive: true
+    )
+  end
+
+  desc "CI Pipeline"
+  lane :ci do
+    lint
+    test
+    build
+  end
+
+end

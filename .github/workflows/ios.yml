@@ -3,17 +3,16 @@ name: iOS CI
 on:
   push:
     branches:
-      - main
       - develop
+      - main
 
   pull_request:
     branches:
       - main
-      - develop
 
 jobs:
   build-and-test:
-    runs-on: macos-latest
+    runs-on: macos-15
 
     steps:
       - name: Checkout
@@ -24,21 +23,14 @@ jobs:
         with:
           xcode-version: latest-stable
 
-      - name: Resolve Packages
-        run: |
-          xcodebuild \
-          -resolvePackageDependencies
+      - name: Install SwiftLint
+        run: brew install swiftlint
 
-      - name: Build
-        run: |
-          xcodebuild \
-          -scheme "BCA Test Aldino" \
-          -destination 'platform=iOS Simulator,name=iPhone 15' \
-          build
+      - name: Install Fastlane
+        run: gem install fastlane
 
-      - name: Test
-        run: |
-          xcodebuild \
-          -scheme "BCA Test Aldino" \
-          -destination 'platform=iOS Simulator,name=iPhone 15' \
-          test
+      - name: Resolve Package Dependencies
+        run: xcodebuild -resolvePackageDependencies
+
+      - name: Run CI Lane
+        run: fastlane ci
