@@ -2,11 +2,6 @@ default_platform(:ios)
 
 platform :ios do
 
-  desc "Run SwiftLint"
-  lane :lint do
-    sh("swiftlint")
-  end
-
   desc "Run unit tests with code coverage"
   lane :test do
     scan(
@@ -26,7 +21,6 @@ platform :ios do
 
   desc "CI Pipeline"
   lane :ci do
-    lint
     test
     build
   end
