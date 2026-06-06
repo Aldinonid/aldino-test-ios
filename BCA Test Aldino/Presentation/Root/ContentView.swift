@@ -8,12 +8,14 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+    @StateObject private var searchViewModel = SearchViewModel(repository: MusicRepository())
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        ZStack(alignment: .bottom) {
+            NavigationStack {
+                SearchView(viewModel: searchViewModel)
+            }
         }
         .padding()
     }

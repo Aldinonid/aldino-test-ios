@@ -39,6 +39,8 @@
 				Domain/Models/SearchResponse.swift,
 				Domain/Models/Song.swift,
 				Domain/Repositories/MusicRepository.swift,
+				Presentation/Search/SearchView.swift,
+				Presentation/Search/SearchViewModel.swift,
 			);
 			target = A54575FC2FD3964D00F2A08A /* BCA Test AldinoTests */;
 		};
