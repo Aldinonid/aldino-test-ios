@@ -33,12 +33,12 @@ jobs:
         run: |
           xcodebuild \
           -scheme "BCA Test Aldino" \
-          -destination 'platform=iOS Simulator,name=iPhone 16' \
+          -destination 'generic/platform=iOS Simulator' \
           build
 
       - name: Test
         run: |
           xcodebuild \
           -scheme "BCA Test Aldino" \
-          -destination 'platform=iOS Simulator,name=iPhone 16' \
+          -destination 'generic/platform=iOS Simulator' \
           test
