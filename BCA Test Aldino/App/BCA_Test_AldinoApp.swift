@@ -12,7 +12,10 @@ struct BCA_Test_AldinoApp: App {
     var body: some Scene {
         WindowGroup {
             NavigationStack {
-                ContentView()
+                ContentView(
+                    searchViewModel: AppDI.makeSearchViewModel(),
+                    playerViewModel: AppDI.makePlayerViewModel()
+                )
             }
         }
     }

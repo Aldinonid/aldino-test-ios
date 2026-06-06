@@ -40,12 +40,11 @@ private extension CachedAsyncImage {
             image = cachedImage
             return
         }
-
+        
         do {
             let (data, _) = try await URLSession.shared.data(from: url)
-            guard let downloadedImage = UIImage(data: data)
-            else { return }
-
+            guard let downloadedImage = UIImage(data: data) else { return }
+            
             ImageCache.shared.setObject(downloadedImage, forKey: url as NSURL)
             image = downloadedImage
         } catch {

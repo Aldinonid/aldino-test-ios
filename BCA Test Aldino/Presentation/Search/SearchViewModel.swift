@@ -28,10 +28,10 @@ final class SearchViewModel: ObservableObject {
 extension SearchViewModel {
     
     func search() async {
-        await search(keyword: searchText)
+        await search(keyword: searchText, isPreview: false)
     }
     
-    func search(keyword: String) async {
+    func search(keyword: String, isPreview: Bool = false) async {
         let trimmedKeyword = keyword.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmedKeyword.isEmpty else {
             songs = []
@@ -40,10 +40,10 @@ extension SearchViewModel {
         }
         state = .loading
         do {
-            let result = try await repository.searchSong(term: trimmedKeyword)
-            allSongs = result
-            songs = result
-            state = .loaded
+            let results = try await repository.searchSong(term: trimmedKeyword)
+            allSongs = results
+            songs = isPreview ? Array(results.prefix(5)) : results
+            state = results.isEmpty ? .empty : .loaded
         } catch {
             songs = []
             state = .error(error.localizedDescription)
@@ -57,7 +57,7 @@ extension SearchViewModel {
             .sink { [weak self] keyword in
                 guard let self else { return }
                 Task {
-                    await self.search(keyword: keyword)
+                    await self.search(keyword: keyword, isPreview: true)
                 }
             }
             .store(in: &cancellables)

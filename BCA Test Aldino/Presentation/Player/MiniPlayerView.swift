@@ -78,9 +78,15 @@ struct MiniPlayerView: View {
     }
     
     private var artwork: some View {
-        CachedAsyncImage(url: URL(string: viewModel.currentSong?.artworkUrl100 ?? ""))
-            .frame(width: 50, height: 50)
-            .clipShape(RoundedRectangle(cornerRadius: 8))
+        AsyncImage(url: URL(string: viewModel.currentSong?.artworkUrl100 ?? "")) { image in
+            image
+                .resizable()
+                .scaledToFill()
+        } placeholder: {
+            Color.gray.opacity(0.2)
+        }
+        .frame(width: 50, height: 50)
+        .clipShape(RoundedRectangle(cornerRadius: 8))
     }
     
     private var percentage: Double {

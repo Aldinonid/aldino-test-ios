@@ -9,10 +9,15 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @StateObject private var searchViewModel = SearchViewModel(repository: MusicRepository())
-    @StateObject private var playerViewModel = PlayerViewModel(playerManager: AudioPlayerManager())
+    @StateObject private var searchViewModel: SearchViewModel
+    @StateObject private var playerViewModel: PlayerViewModel
     
     @State private var showPlayer = false
+    
+    init(searchViewModel: SearchViewModel, playerViewModel: PlayerViewModel) {
+        _searchViewModel = StateObject(wrappedValue: searchViewModel)
+        _playerViewModel = StateObject(wrappedValue: playerViewModel)
+    }
     
     var body: some View {
         VStack {

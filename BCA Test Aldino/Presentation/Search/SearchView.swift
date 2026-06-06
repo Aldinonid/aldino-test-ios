@@ -22,7 +22,7 @@ struct SearchView: View {
             case .loaded:
                 songList
             case .empty:
-                noResult
+                ContentUnavailableView.search
             case .error(let message):
                 errorView(message)
             }
@@ -58,12 +58,6 @@ extension SearchView {
         EmptyStateView(icon: "music.note.list",
                        title: "Search for music",
                        message: "Type an artist or song name above")
-    }
-    
-    var noResult: some View {
-        ContentUnavailableView("No Results",
-                               systemImage: "magnifyingglass",
-                               description: Text("Try searching for another song"))
     }
     
     func errorView(_ message: String) -> some View {

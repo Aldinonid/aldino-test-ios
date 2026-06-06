@@ -69,10 +69,17 @@ final class PlayerViewModel: ObservableObject {
     func next() {
         let nextIndex = currentIndex + 1
         guard songs.indices.contains(nextIndex) else { return }
+        progress = 0
+        playerManager.seek(to: 0)
         playSong(at: nextIndex)
     }
     
     func previous() {
+        if progress > 3 {
+            progress = 0
+            playerManager.seek(to: 0)
+            return
+        }
         let previousIndex = currentIndex - 1
         guard songs.indices.contains(previousIndex) else { return }
         playSong(at: previousIndex)

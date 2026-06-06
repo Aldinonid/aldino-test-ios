@@ -12,12 +12,9 @@ protocol NetworkManaging {
 }
 
 final class NetworkManager: NetworkManaging {
+    
     static let shared = NetworkManager()
-    private let session: URLSession
-
-    init(session: URLSession = .shared) {
-        self.session = session
-    }
+    private let session: URLSession = .shared
 
     func request<T: Decodable>(_ endpoint: Endpoint, type: T.Type) async throws -> T {
         do {

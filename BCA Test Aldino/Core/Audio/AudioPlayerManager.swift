@@ -8,7 +8,6 @@
 import AVFoundation
 
 protocol AudioPlayer: AnyObject {
-    
     var duration: Double { get }
     var currentTime: Double { get }
     var isPlaying: Bool { get }
@@ -25,7 +24,6 @@ protocol AudioPlayer: AnyObject {
 }
 
 final class AudioPlayerManager: AudioPlayer {
-    
     var onTimeChanged: ((Double) -> Void)?
     var onDurationChanged: ((Double) -> Void)?
     var onPlaybackStateChanged: ((Bool) -> Void)?
@@ -67,6 +65,12 @@ final class AudioPlayerManager: AudioPlayer {
         observeCurrentTime()
         avPlayer?.play()
         onPlaybackStateChanged?(true)
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(playerDidFinish),
+            name: .AVPlayerItemDidPlayToEndTime,
+            object: item
+        )
     }
     
     func pause() {
@@ -100,17 +104,12 @@ private extension AudioPlayerManager {
                 else { return }
                 let duration = item.duration.seconds
                 guard duration.isFinite else { return }
-                
                 self.onDurationChanged?(duration)
             }
     }
     
     func observeCurrentTime() {
-        let interval = CMTime(
-            seconds: 0.5,
-            preferredTimescale: 600
-        )
-        
+        let interval = CMTime(seconds: 0.5, preferredTimescale: 600)
         timeObserver = avPlayer?
             .addPeriodicTimeObserver(
                 forInterval: interval,

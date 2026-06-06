@@ -14,7 +14,7 @@ protocol MusicRepositoryProtocol: Sendable {
 final class MusicRepository: MusicRepositoryProtocol {
     private let networkManager: NetworkManaging
 
-    init(networkManager: NetworkManaging = NetworkManager.shared) {
+    init(networkManager: NetworkManaging) {
         self.networkManager = networkManager
     }
 

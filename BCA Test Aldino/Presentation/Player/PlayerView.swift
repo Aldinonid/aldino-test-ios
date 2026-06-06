@@ -12,71 +12,99 @@ struct PlayerView: View {
     @ObservedObject var viewModel: PlayerViewModel
     
     var body: some View {
-        VStack(spacing: 24) {
-            CachedAsyncImage(url: URL(string: viewModel.currentSong?.artworkUrl100 ?? ""))
-                .frame(maxWidth: 300)
-                .clipShape(RoundedRectangle(cornerRadius: 16))
-                .padding(.top, 24)
-            
-            VStack(spacing: 8) {
-                Text(viewModel.currentSong?.trackName ?? "-")
-                    .font(.title2)
-                    .fontWeight(.semibold)
-                
-                Text(viewModel.currentSong?.artistName ?? "-")
-                    .foregroundStyle(.secondary)
+        NavigationStack {
+            VStack(spacing: 24) {
+                artworkSection
+                    .padding(.top, 24)
+                songInfoSection
+                progressSection
+                playbackControls
+                Spacer()
             }
+            .padding()
+        }
+    }
+}
+
+// MARK: - Sections
+
+private extension PlayerView {
+    
+    var artworkSection: some View {
+        
+        AsyncImage(url: URL(string: viewModel.currentSong?.artworkUrl100 ?? "")) { image in
+            image
+                .resizable()
+                .scaledToFit()
             
-            VStack {
-                Slider(
-                    value: $viewModel.progress,
-                    in: 0...max(viewModel.duration, 1),
-                    onEditingChanged: { editing in
-                        viewModel.isSeeking = editing
-                        if !editing {
-                            viewModel.seek()
-                        }
-                    }
-                )
-                
-                HStack {
-                    Text(viewModel.currentTimeText)
-                    Spacer()
-                    Text(viewModel.durationText)
-                }
-                .font(.caption)
+        } placeholder: {
+            ProgressView()
+        }
+        .frame(maxWidth: 300)
+        .clipShape(RoundedRectangle(cornerRadius: 16))
+    }
+    
+    var songInfoSection: some View {
+        VStack(spacing: 8) {
+            Text(viewModel.currentSong?.trackName ?? "-")
+                .font(.title2)
+                .fontWeight(.semibold)
+            Text(viewModel.currentSong?.artistName ?? "-")
                 .foregroundStyle(.secondary)
+        }
+    }
+    
+    var progressSection: some View {
+        VStack {
+            Slider(
+                value: $viewModel.progress,
+                in: 0...max(viewModel.duration, 1),
+                onEditingChanged: { editing in
+                    viewModel.isSeeking = editing
+                    if !editing {
+                        viewModel.seek()
+                    }
+                }
+            )
+            
+            HStack {
+                Text(viewModel.currentTimeText)
+                Spacer()
+                Text(viewModel.durationText)
+            }
+            .font(.caption)
+            .foregroundStyle(.secondary)
+        }
+    }
+    
+    var playbackControls: some View {
+        HStack(spacing: 40) {
+            Button {
+                viewModel.previous()
+            } label: {
+                Image(systemName: "backward.fill")
+                    .font(.largeTitle)
             }
             
-            HStack(spacing: 40) {
-                Button {
-                    viewModel.previous()
-                } label: {
-                    Image(systemName: "backward.fill")
-                        .font(.largeTitle)
-                }
-                
-                Button {
-                    viewModel.togglePlayPause()
-                } label: {
-                    Image(
-                        systemName:
-                            viewModel.playbackState == .playing
-                        ? "pause.circle.fill"
-                        : "play.circle.fill"
-                    )
-                    .font(.system(size: 70))
-                }
-                
-                Button {
-                    viewModel.next()
-                } label: {
-                    Image(systemName: "forward.fill")
-                        .font(.largeTitle)
-                }
+            Button {
+                viewModel.togglePlayPause()
+            } label: {
+                Image(
+                    systemName:
+                        viewModel.playbackState == .playing
+                    ? "pause.circle.fill"
+                    : "play.circle.fill"
+                )
+                .font(.system(size: 70))
+            }
+            
+            Button {
+                viewModel.next()
+            } label: {
+                Image(systemName: "forward.fill")
+                    .font(.largeTitle)
             }
         }
-        .padding()
     }
 }
 
