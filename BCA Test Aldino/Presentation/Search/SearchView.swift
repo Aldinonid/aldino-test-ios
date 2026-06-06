@@ -10,6 +10,7 @@ import SwiftUI
 struct SearchView: View {
     
     @ObservedObject var viewModel: SearchViewModel
+    @ObservedObject var playerViewModel: PlayerViewModel
     
     var body: some View {
         Group {
@@ -23,7 +24,8 @@ struct SearchView: View {
             case .loaded:
                 List(viewModel.songs) { song in
                     Button {
-                        
+                        playerViewModel.setup(songs: viewModel.songs)
+                        playerViewModel.play(song)
                     } label: {
                         Text(song.trackName)
                     }

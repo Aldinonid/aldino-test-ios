@@ -11,7 +11,9 @@ import SwiftUI
 struct BCA_Test_AldinoApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            NavigationStack {
+                ContentView()
+            }
         }
     }
 }

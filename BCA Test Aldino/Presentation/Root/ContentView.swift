@@ -10,14 +10,27 @@ import SwiftUI
 struct ContentView: View {
     
     @StateObject private var searchViewModel = SearchViewModel(repository: MusicRepository())
+    @StateObject private var playerViewModel = PlayerViewModel(playerManager: AudioPlayerManager())
+    
+    @State private var showPlayer = false
     
     var body: some View {
-        ZStack(alignment: .bottom) {
-            NavigationStack {
-                SearchView(viewModel: searchViewModel)
+        VStack {
+            SearchView(viewModel: searchViewModel,
+                       playerViewModel: playerViewModel)
+            
+            if playerViewModel.currentSong != nil {
+                Divider()
+                MiniPlayerView(viewModel: playerViewModel) {
+                    showPlayer = true
+                }
             }
         }
-        .padding()
+        .navigationTitle("Music Player")
+        .sheet(isPresented: $showPlayer) {
+            PlayerView()
+                .presentationDragIndicator(.visible)
+        }
     }
 }
 
