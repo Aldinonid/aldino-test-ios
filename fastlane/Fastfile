@@ -11,18 +11,9 @@ platform :ios do
     )
   end
 
-  desc "Build application"
-  lane :build do
-    build_app(
-      scheme: "BCA Test Aldino",
-      skip_archive: true
-    )
-  end
-
   desc "CI Pipeline"
   lane :ci do
     test
-    build
   end
 
 end
