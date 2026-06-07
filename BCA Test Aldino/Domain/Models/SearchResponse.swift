@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct SearchResponse: Decodable, Sendable {
+struct SearchResponse: Decodable {
     let resultCount: Int
     let results: [Song]
 }
